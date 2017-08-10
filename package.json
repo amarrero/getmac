@@ -1,0 +1,29 @@
+{
+  "name": "getmac",
+  "version": "1.0.0",
+  "description": "",
+  "main": "getmac.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/amarrero/getmac.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "MAC",
+    "network"
+  ],
+  "author": "Abel Marrero",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amarrero/getmac/issues"
+  },
+  "homepage": "https://github.com/amarrero/getmac#readme",
+  "dependencies": {
+    "async": "^2.5.0",
+    "underscore": "^1.8.3",
+    "util": "^0.10.3"
+  }
+}
