@@ -1,14 +1,14 @@
 {
-  "name": "getmac",
+  "name": "guessmac",
   "version": "1.0.0",
   "description": "",
-  "main": "getmac.js",
+  "main": "guessmac.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/amarrero/getmac.git"
+    "url": "git+ssh://git@github.com/amarrero/guessmac.git"
   },
   "keywords": [
     "NodeJS",
@@ -18,9 +18,9 @@
   "author": "Abel Marrero",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/amarrero/getmac/issues"
+    "url": "https://github.com/amarrero/guessmac/issues"
   },
-  "homepage": "https://github.com/amarrero/getmac#readme",
+  "homepage": "https://github.com/amarrero/guessmac#readme",
   "dependencies": {
     "async": "^2.5.0",
     "underscore": "^1.8.3",
