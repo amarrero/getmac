@@ -15,7 +15,16 @@ function shell_escape(str) {
 
 module.exports = function(callback) {
     async.waterfall([
-        async.apply(exec, 'ip route list | grep ^default', {timeout: 5000}),
+        cb => {
+            switch (process.platform) {
+                case "linux":
+                    exec('ip route list | grep ^default', {timeout: 5000}, cb);
+                    break;
+                default:
+                    cb(null, "", null);
+                    break;
+            }
+        },
         (stdout, _, cb) => {
             var lines = stdout.toString().split('\n');
             for (var i = 0; i < lines.length; i ++) {
