@@ -36,7 +36,7 @@
                         return cb(null, match[1]);
                     }
                 }
-                return cb(null);
+                return cb(null, null);
             },
             (default_iface, cb) => {
                 let ifaces = os.networkInterfaces();
