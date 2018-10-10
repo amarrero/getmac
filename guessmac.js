@@ -10,11 +10,11 @@
     const MAC_RE = /\blink\/[^\s]*\s((?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2})\b/;
     const DEFAULT_IFACE_NAME_RE = /\bdev\s+([^\s]+)\b/;
 
-    function shell_escape(str) {
+    function shellEscape(str) {
         return str.replace(/\\/g, '\\\\').replace(/'/g, '\\\'');
     }
 
-    module.exports = function (callback) {
+    function guessDefaultRouteIface(callback) {
         async.waterfall([
             cb => {
                 switch (process.platform) {
@@ -37,11 +37,26 @@
                     }
                 }
                 return cb(null, null);
-            },
-            (default_iface, cb) => {
+            }
+        ], callback);
+    }
+
+    function guessWiredInterface(callback) {
+        for (let ifaceName in os.networkInterfaces()) {
+            if (ifaceName.startsWith("eth")) {
+                return callback(null, ifaceName);
+            }
+        }
+        callback(null, null);
+    }
+
+    function guessMac(guessDefaultFunc, callback) {
+        async.waterfall([
+            guessDefaultFunc,
+            (defaultIface, cb) => {
                 let ifaces = os.networkInterfaces();
-                if (default_iface !== null && !_.isUndefined(ifaces[default_iface])) {
-                    let addresses = ifaces[default_iface];
+                if (defaultIface !== null && !_.isUndefined(ifaces[defaultIface])) {
+                    let addresses = ifaces[defaultIface];
                     for (let i = 0; i < addresses.length; i++) {
                         let address = addresses[i];
                         if (address.internal === false && _.isString(address.mac)) {
@@ -49,8 +64,8 @@
                         }
                     }
                 }
-                for (let iface_name in ifaces) {
-                    let addresses = ifaces[iface_name];
+                for (let ifaceName in ifaces) {
+                    let addresses = ifaces[ifaceName];
                     for (let i = 0; i < addresses.length; i++) {
                         let address = addresses[i];
                         if (address.internal === false && _.isString(address.mac)) {
@@ -60,12 +75,12 @@
                 }
                 async.waterfall([
                     icb => {
-                        var fallback_cmd = 'ip -o link show | grep -v link\\/loopback',
-                            cmd = fallback_cmd;
-                        if (default_iface !== null) {
-                            cmd = util.format('(ip -o link show dev %s | grep -v link\\/loopback) || (%s)', default_iface, fallback_cmd);
+                        var fallbackCmd = 'ip -o link show | grep -v link\\/loopback',
+                            cmd = fallbackCmd;
+                        if (defaultIface !== null) {
+                            cmd = util.format('(ip -o link show dev %s | grep -v link\\/loopback) || (%s)', defaultIface, fallbackCmd);
                         }
-                        cmd = util.format('sh -c \'%s\'', shell_escape(cmd));
+                        cmd = util.format('sh -c \'%s\'', shellEscape(cmd));
                         icb(null, cmd, {
                             timeout: 5000
                         });
@@ -84,5 +99,7 @@
                 ], cb);
             }
         ], callback);
-    };
+    }
+
+    module.exports = async.apply(guessMac, guessWiredInterface);
 }());

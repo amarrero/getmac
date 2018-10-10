@@ -1,6 +1,6 @@
 {
-  "name": "guessmac2",
-  "version": "1.0.7",
+  "name": "guessmac",
+  "version": "1.0.8",
   "description": "",
   "main": "guessmac.js",
   "scripts": {
